@@ -1,20 +1,22 @@
-# Expo Router Example
+# Appli_quizz_departement
+Appli mobile pour apprendre les département français et leur numéro !
 
-Use [`expo-router`](https://docs.expo.dev/router/introduction/) to build native navigation using files in the `app/` directory.
+## Setup
 
-## 🚀 How to launch
+```shell
+cd app
+npm install
+```
 
-- expo
+Lancement de l'app
 
+- avec expo (télécharger l'application expo go sur play store)
 ```shell
 npx expo start
 ```
 
-- android
+- avec android (SDK)
+
 ```shell
 npm run android
 ```
-
-## 📝 Notes
-
-- [Expo Router: Docs](https://docs.expo.dev/router/introduction/)
