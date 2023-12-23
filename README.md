@@ -4,7 +4,6 @@ Appli mobile pour apprendre les département français et leur numéro !
 ## Setup
 
 ```shell
-cd app
 npm install
 ```
 
