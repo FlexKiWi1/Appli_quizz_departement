@@ -4,18 +4,22 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import TabLayout from './screens/Tabs/layout';
 import { AppTheme } from './constants/theme';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+const queryCLient = new QueryClient();
 const MainStack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer theme={AppTheme}>
-      <MainStack.Navigator screenOptions={{
-        headerShown: false
-      }}>
-        <MainStack.Screen name='tabs' component={TabLayout} />
-      </MainStack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={queryCLient}>
+      <NavigationContainer theme={AppTheme}>
+        <MainStack.Navigator screenOptions={{
+          headerShown: false
+        }}>
+          <MainStack.Screen name='tabs' component={TabLayout} />
+        </MainStack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 

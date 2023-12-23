@@ -6,6 +6,7 @@ import Home from "./Home";
 import { COLORS, SIZES } from "../../constants/theme";
 import Settings from "./Settings";
 import QuizList from "./QuizList";
+import Map from "./Map";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +40,7 @@ function TabLayout() {
         },
     })}>
         <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Map" component={Settings} />
+        <Tab.Screen name="Map" component={Map} />
         <Tab.Screen name="Quiz" component={QuizList} />
         <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
