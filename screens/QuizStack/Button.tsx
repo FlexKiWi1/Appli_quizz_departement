@@ -10,7 +10,7 @@ type ButtonProps = {
 
 export default function Button({title, iconLeft, iconRight, ...props}: ButtonProps) {
   return (
-    <TouchableOpacity style={[styles.container, props.style]} {...props}>
+    <TouchableOpacity style={[props.style, styles.container, !iconLeft && !iconRight && {justifyContent: "center"}]} {...props}>
         {iconLeft && iconLeft}
         <Text style={styles.text}>{title}</Text>
         {iconRight && iconRight}

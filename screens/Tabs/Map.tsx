@@ -47,7 +47,8 @@ export default function Map() {
               {region.departments.map(department => (
                 <Path
                   key={department.number}
-                  stroke={department.number === currentDepartment ? COLORS.primary : COLORS.grayDarkMedium}
+                  strokeWidth={3}
+                  stroke={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.grayDarkMedium : COLORS.grayDarkMedium}
                   fill={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.grayDark : COLORS.black}
                   data-name={department.name}
                   data-department-number={department.number}
@@ -84,7 +85,8 @@ const styles = StyleSheet.create({
     height: '60%',
     // borderWidth: 1,
     // borderColor: "red",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    // backgroundColor: COLORS.grayDark,
   },
   infosContainer: {
     height: "30%",

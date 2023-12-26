@@ -12,9 +12,9 @@ type QuizButtonProps = {
 }
 
 export default function QuizButton({quiz}: QuizButtonProps) {
-  const navitation = useNavigation()
+  const navigation = useNavigation()
   return (
-    <TouchableOpacity onPress={() => navitation.navigate("quiz", {
+    <TouchableOpacity onPress={() => navigation.navigate("quiz", {
       screen: "settings",
       quiz: quiz
     })}>

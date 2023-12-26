@@ -26,5 +26,8 @@ export const typescaleStyle = StyleSheet.create({
     small: {
         fontSize: SIZES.xSmall,
         color: COLORS.white
+    },
+    centered: {
+        textAlign: "center",
     }
 })

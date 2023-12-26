@@ -6,6 +6,7 @@ import TabLayout from './screens/Tabs/layout';
 import { AppTheme, COLORS } from './constants/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import QuizStackLayout from './screens/QuizStack/layout';
+import { QuizProvider } from './screens/QuizStack/ScreenContext';
 
 const queryCLient = new QueryClient();
 const MainStack = createNativeStackNavigator();
@@ -13,16 +14,18 @@ const MainStack = createNativeStackNavigator();
 export default function App() {
   return (
     <QueryClientProvider client={queryCLient}>
-      <View style={{flex: 1, backgroundColor: COLORS.black}}>
-        <NavigationContainer theme={AppTheme}>
-          <MainStack.Navigator screenOptions={{
-            headerShown: false
-          }}>
-            <MainStack.Screen name='tabs' component={TabLayout} />
-            <MainStack.Screen name='quiz' component={QuizStackLayout} />
-          </MainStack.Navigator>
-        </NavigationContainer>
-      </View>
+      <QuizProvider>
+        <View style={{ flex: 1, backgroundColor: COLORS.black }}>
+          <NavigationContainer theme={AppTheme}>
+            <MainStack.Navigator screenOptions={{
+              headerShown: false
+            }}>
+              <MainStack.Screen name='tabs' component={TabLayout} />
+              <MainStack.Screen name='quiz' component={QuizStackLayout} />
+            </MainStack.Navigator>
+          </NavigationContainer>
+        </View>
+      </QuizProvider>
     </QueryClientProvider>
   );
 }
