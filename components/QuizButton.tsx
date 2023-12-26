@@ -4,19 +4,24 @@ import Text from './Text';
 import icons from '../constants/icons';
 import { COLORS, SIZES } from '../constants/theme';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Quiz } from '../types';
+import { useNavigation } from '@react-navigation/native';
 
 type QuizButtonProps = {
-  level: number,
-  quizName: string
+  quiz: Quiz;
 }
 
-export default function QuizButton({level, quizName}: QuizButtonProps) {
+export default function QuizButton({quiz}: QuizButtonProps) {
+  const navitation = useNavigation()
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => navitation.navigate("quiz", {
+      screen: "settings",
+      quiz: quiz
+    })}>
       <LinearGradient  style={styles.container} start={[0, 0.5]} colors={[COLORS.grayDarkMedium, COLORS.grayDark]}>
-        <Text style={styles.quizNameText}>{quizName}</Text>
+        <Text style={styles.quizNameText}>{quiz.name}</Text>
         <View style={styles.levelContainer}>
-            <Text style={styles.levelText}>{level}</Text>
+            <Text style={styles.levelText}>{quiz.level}</Text>
         </View>
         {/* <View>
           <Image source={icons.arrowRight} />

@@ -3,10 +3,11 @@ import { Feather } from '@expo/vector-icons';
 import { StyleSheet, View, Text } from "react-native";
 
 import Home from "./Home";
-import { COLORS, SIZES } from "../../constants/theme";
-import Settings from "./Settings";
-import QuizList from "./QuizList";
 import Map from "./Map";
+import QuizList from "./QuizList";
+import Settings from "./Settings";
+import { COLORS, SIZES } from "../../constants/theme";
+import Header from "../../components/Header";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,15 +15,18 @@ function TabLayout() {
     return <Tab.Navigator screenOptions={({route}) => ({
 
         // Header
+        headerTitle: () => <Header title={route.name} />,
         headerStyle: {backgroundColor: COLORS.black},
 
         // TabBar
         tabBarStyle: {position: "absolute", height: 65},
         tabBarBackground: () => <View style={[StyleSheet.absoluteFill, styles.tabBarContainer]} />,
-        tabBarLabelStyle: {bottom: 10},
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.grayLight,
+
+        tabBarLabelStyle: {bottom: 10},
         tabBarLabel: ({focused, children}) => <Text style={{fontWeight: focused ? "600" : "400", fontSize: SIZES.small, color: focused ? COLORS.white : COLORS.grayLight, bottom: 10}} children={children} />,
+
         tabBarIcon({color, focused, size}) {
             let iconName;
 

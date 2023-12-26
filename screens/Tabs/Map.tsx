@@ -2,29 +2,31 @@ import { SafeAreaView, ActivityIndicator, ScrollView, StyleSheet, View } from 'r
 import React, { useEffect, useState } from 'react'
 import Svg, { G, Path } from "react-native-svg";
 import Text from '../../components/Text';
-import frenchMapData from "../../data/frenchMap.json"
+import frenchMapData from "../../data/frenchMap.json";
+import departments from '../../data/departements.json';
+import regions from '../../data/regions.json';
 import { COLORS } from '../../constants/theme';
 import { useMutation } from '@tanstack/react-query';
-import { departments } from '../../services/api/apiGeo';
 import { typescaleStyle } from '../../styles/Typescale.style';
+import { Department, Region } from '../../types';
+import PagerView from 'react-native-pager-view';
 
 export default function Map() {
   const [currentRegion, setCurrentRegion] = useState("")
   const [currentDepartment, setCurrentDepartment] = useState("")
   const [lastDepartment, setLastDepartment] = useState("")
-
-  const departmentMutation = useMutation({
-    mutationKey: ["department", currentDepartment],
-    mutationFn: (code: number) => departments.retrieve(code)
-  })
+  const [currentData, setCurrentData] = useState<{department?: Department, region?: Region}>({})
 
   useEffect(() => {
     if (currentDepartment !== lastDepartment) {
-      departmentMutation.mutate(parseInt(currentDepartment));
+      setCurrentData({
+        department: departments.filter((department: Department) => department.code === currentDepartment)[0],
+        region: regions.filter(region => region.code === currentRegion)[0]
+      })
       setLastDepartment(currentDepartment);
-      console.log("current", currentDepartment, "last", lastDepartment);
+      // console.log("current", currentDepartment, "last", lastDepartment);
     }
-  }, [lastDepartment, currentDepartment, departmentMutation])
+  }, [lastDepartment, currentDepartment, currentData])
 
   return (
     <SafeAreaView>
@@ -66,17 +68,9 @@ export default function Map() {
             <Text style={typescaleStyle.h4}>Clique sur un département</Text>
           ) : <>
             <Text style={typescaleStyle.h1}>{currentDepartment}</Text>
-            {!departmentMutation.isPending ? <>
-              {departmentMutation.isSuccess && (
-                <Text style={typescaleStyle.h2}>{departmentMutation.data.nom}</Text>
-              )}
-            </> : (
-              <ActivityIndicator size="small" color={COLORS.grayLight} />
-            )}
+            <Text style={typescaleStyle.h2}>{currentData.department?.nom}</Text>
+            <Text style={typescaleStyle.h2}>{currentData.region?.nom}</Text>
           </>}
-        </View>
-        <View style={styles.infosBlockContainer}>
-
         </View>
       </View>
     </SafeAreaView>
@@ -98,16 +92,15 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: "red",
     flexDirection: "row",
-    justifyContent: "space-between",
     gap: 10
   },
   infosBlockContainer: {
-    // flex: 1,
+    flex: 1,
     width: "100%",
     height: "100%",
     // backgroundColor: COLORS.grayDark,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
 })
