@@ -6,26 +6,24 @@ import { COLORS, SIZES } from '../constants/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Quiz } from '../types';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type QuizButtonProps = {
   quiz: Quiz;
 }
 
 export default function QuizButton({quiz}: QuizButtonProps) {
-  const navigation = useNavigation()
+  const navigation = useNavigation<NativeStackNavigationProp<{quiz: {}}>>()
   return (
     <TouchableOpacity onPress={() => navigation.navigate("quiz", {
       screen: "settings",
       quiz: quiz
     })}>
-      <LinearGradient  style={styles.container} start={[0, 0.5]} colors={[COLORS.grayDarkMedium, COLORS.grayDark]}>
+      <LinearGradient style={styles.container} start={[0, 0.5]} colors={[COLORS.grayDark, COLORS.grayDark]}>
         <Text style={styles.quizNameText}>{quiz.name}</Text>
         <View style={styles.levelContainer}>
             <Text style={styles.levelText}>{quiz.level}</Text>
         </View>
-        {/* <View>
-          <Image source={icons.arrowRight} />
-        </View> */}
       </LinearGradient>
     </TouchableOpacity>
   )

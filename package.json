@@ -28,7 +28,10 @@
     "react-native-svg": "13.9.0",
     "react-native-switch": "^1.5.1",
     "react-native-tab-view": "^3.5.2",
-    "react-native-web": "~0.19.6"
+    "react-native-web": "~0.19.6",
+    "expo-sqlite": "~11.3.3",
+    "expo-file-system": "~15.4.5",
+    "expo-asset": "~8.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

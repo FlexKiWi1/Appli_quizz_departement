@@ -47,7 +47,7 @@ export default function Map() {
               {region.departments.map(department => (
                 <Path
                   key={department.number}
-                  strokeWidth={3}
+                  strokeWidth={2}
                   stroke={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.grayDarkMedium : COLORS.grayDarkMedium}
                   fill={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.grayDark : COLORS.black}
                   data-name={department.name}

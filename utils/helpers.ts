@@ -6,11 +6,11 @@ export function getRandomInt(min: number, max: number) {
 type getRandomElementsArgs<T> = {
     array: T[],
     n: number,
-    exclude: [],
+    exclude: string[],
     key?: keyof T,
 }
 
-export function getRandomElements<T>({ array, n, exclude, key }: getRandomElementsArgs<T>) {
+export function getRandomElements<T>({ array, n, exclude, key }: getRandomElementsArgs<T>): string[] {
     let results: [] = [];
     let i = 0;
     let randomElement;
@@ -34,7 +34,7 @@ export function getRandomElements<T>({ array, n, exclude, key }: getRandomElemen
     return results;
 }
 
-export function shuffleArray(array: []) {
+export function shuffleArray<T>(array: T[]) {
     let currentIndex = array.length, randomIndex;
 
     // While there remain elements to shuffle.

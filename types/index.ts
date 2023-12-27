@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 
 export type Quiz = {
     id: number;
@@ -8,6 +9,8 @@ export type Quiz = {
     getPropositions: (number: number, question: Question) => string[];
     isRightAnswer: (question: Question, answer: string) => boolean;
     getAnswerResponse: (answer: string) => string;
+    renderQuestion: (question: Question) => ReactNode;
+    renderAnswer: (answer: string) => ReactNode;
 }
 
 export type Department = {

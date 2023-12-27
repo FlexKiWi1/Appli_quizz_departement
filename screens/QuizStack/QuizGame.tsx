@@ -1,3 +1,4 @@
+import * as SQLite from "expo-sqlite";
 import { StyleSheet, SafeAreaView, Animated, View, FlatList, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Text from '../../components/Text'
@@ -9,25 +10,39 @@ import { COLORS, SIZES } from '../../constants/theme'
 import Button from './Button'
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
+import { updateData } from '../../utils/storage'
 
 
 export default function QuizGame() {
   const navigation = useNavigation()
-  
+
   const { quiz, settings } = useQuiz()
-  const maxQuestions = 4 + quiz.level;
+  // const maxQuestions = 4 + quiz.level;
+  const maxQuestions = 2;
   const [progression, setProgression] = useState(0)
   const [currentQuestion, setCurrentQuestion] = useState<Question>()
   const [currentPropositions, setCurrentPropositions] = useState<string[]>([])
   const [isAnswered, setIsAnswered] = useState(false)
   const [currentAnswer, setCurrentAnswer] = useState("")
-  let answerIsRight = currentAnswer != "" ? quiz.isRightAnswer(currentQuestion, currentAnswer) : false;
+  let answerIsRight = currentAnswer != "" ? quiz.isRightAnswer(currentQuestion as Question, currentAnswer) : false;
 
+  // setup first question
   useEffect(() => {
     const question = quiz.getQuestion()
     setCurrentQuestion(() => question)
     setCurrentPropositions(() => quiz.getPropositions(settings.propositionNumber - 1, question as Question))
   }, [])
+
+  useEffect(() => {
+    if (progression === maxQuestions) {
+      const db = SQLite.openDatabase("db.db")
+      console.log(quiz.level);
+      updateData(db, "quiz", quiz.id, ["level"], [quiz.level + 1])
+    }
+
+    return () => {
+    }
+  }, [progression])
 
   const answerQuestion = (answer) => {
     setCurrentAnswer(() => answer)
@@ -50,14 +65,14 @@ export default function QuizGame() {
     <SafeAreaView style={{ flex: 1 }}>
 
       <View style={styles.progressionBarContainer}>
-        <View style={[styles.progressionBar, {width: `${(progression * 100) / (maxQuestions)}%`}]}></View>
+        <View style={[styles.progressionBar, { width: `${(progression * 100) / (maxQuestions)}%` }]}></View>
       </View>
 
       {currentQuestion && progression < maxQuestions && (
         <>
           <View style={styles.questionContainer}>
             <Text style={typescaleStyle.h3}>{quiz.question}</Text>
-            <Text style={[typescaleStyle.h1, typescaleStyle.centered]}>{currentQuestion?.value}</Text>
+            {quiz.renderQuestion(currentQuestion)}
           </View>
           <View style={styles.propositionsContainer}>
             <FlatList
@@ -69,7 +84,9 @@ export default function QuizGame() {
                 isAnswered={isAnswered}
                 // onPress={() => answer(item)}
                 onPress={() => !isAnswered ? answerQuestion(item) : null}
-              />}
+              >
+                {quiz.renderAnswer(item)}
+              </AnswerButton>}
             />
           </View>
         </>
@@ -89,17 +106,20 @@ export default function QuizGame() {
 
       {progression == maxQuestions && <>
         <View style={styles.nextLevelContainer}>
-          <Text style={[styles.nextLevelText, typescaleStyle.h2]}>Bravo tu as fini le niveau {quiz.level}</Text>
+          <Text style={[styles.nextLevelText, typescaleStyle.h2]}>Bravo</Text>
           <Button
-            title='Passer au niveau suivant'
+            title={`Passer au niveau ${quiz.level + 1}`}
             iconRight={<Feather name="arrow-right" size={SIZES.large} color={COLORS.black} />}
-            onPress={() => navigation.navigate("quiz", {
-              screen: "quiz-game",
-              quiz: {
-                ...quiz,
-                level: quiz.level + 1
-              }
-            })}
+            onPress={() => {
+              setProgression(0);
+              navigation.navigate("quiz", {
+                screen: "quiz-game",
+                quiz: {
+                  ...quiz,
+                  level: quiz.level + 1
+                }
+              })
+            }}
           />
         </View>
       </>}
@@ -110,7 +130,7 @@ export default function QuizGame() {
 
 const styles = StyleSheet.create({
   progressionBarContainer: {
-    width: 300,
+    width: Dimensions.get("screen").width - (SIZES.large * 2),
     alignSelf: "center",
     height: 10,
     marginTop: SIZES.large,
@@ -128,6 +148,7 @@ const styles = StyleSheet.create({
     height: "30%",
     alignItems: "center",
     justifyContent: "center",
+    textAlign: "center",
   },
   propositionsContainer: {
     height: "40%",

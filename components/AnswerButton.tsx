@@ -9,7 +9,7 @@ type AnswerButtonProps = {
     isRightAnswer: boolean;
 } & TouchableOpacity["props"]
 
-const AnswerButton = ({title, isAnswered, isRightAnswer, onPress, ...props}: AnswerButtonProps) => {
+const AnswerButton = ({isAnswered, isRightAnswer, onPress, ...props}: AnswerButtonProps) => {
   const [isClicked, setIsClicked] = useState(false)
   const color = isRightAnswer ? {backgroundColor: COLORS.success} : {backgroundColor: COLORS.error}
   const showColor = isClicked || (isAnswered && isRightAnswer)
@@ -29,7 +29,7 @@ const AnswerButton = ({title, isAnswered, isRightAnswer, onPress, ...props}: Ans
 
   return (
     <TouchableOpacity style={[styles.container, showColor && color]} onPress={e => onPressHandler(e)} {...props}>
-      <Text style={typescaleStyle.h2}>{title}</Text>
+      {props.children}
     </TouchableOpacity>
   )
 }
