@@ -7,11 +7,12 @@ export async function openDatabase() {
     return SQLite.openDatabase("db.db");
 }
 
-export function createTable(db: SQLite.SQLiteDatabase, tableName: string, columns: string) {
+export function createTable(db: SQLite.SQLiteDatabase, tableName: string, columns: string, primaryKey: string[]) {
     db.transaction(tx => {
         tx.executeSql(
             `CREATE TABLE IF NOT EXISTS ${tableName} (
-                ${columns}
+                ${columns},
+                PRIMARY KEY (${primaryKey.join(",")})
             );`,
             [],
             (_, result) => {
@@ -25,13 +26,14 @@ export function createTable(db: SQLite.SQLiteDatabase, tableName: string, column
     })
 }
 
-export function insertData(db: SQLite.SQLiteDatabase, tableName: string, columns: string, columnsData: any[]) {
+export function insertData(db: SQLite.SQLiteDatabase, tableName: string, columnsName: string[], columnsData: any[]) {
+    // console.log(`INSERT INTO ${tableName} (${columnsName.join(", ")}) VALUES (${columnsName.map((column, i) => i === 0 ? "?" : " ?")})`);
     db.transaction((tx) => {
         tx.executeSql(
-            `INSERT INTO ${tableName} (${columns}) VALUES (?, ?)`,
+            `INSERT INTO ${tableName} (${columnsName.join(", ")}) VALUES (${columnsName.map((column, i) => i === 0 ? "?" : " ?")})`,
             columnsData,
             (_, result) => {
-                console.log('Données insérées avec succès', result);
+                console.log('Données', result["insertId"], 'insérées avec succès', result["rows"]["_array"]);
             },
             (_, error) => {
                 console.log('Erreur lors de l\'insertion des données', error);
@@ -41,12 +43,21 @@ export function insertData(db: SQLite.SQLiteDatabase, tableName: string, columns
     });
 }
 
-export function updateData(db: SQLite.SQLiteDatabase, tableName: string, id: number, columnsName: string[], columnsData: any[]) {
-    console.log(`UPDATE ${tableName} SET ${columnsName.map(column => `${column} = ? `)} WHERE id = ?`, columnsData.concat([id]),);
+export function updateData(
+    db: SQLite.SQLiteDatabase,
+    tableName: string,
+    primaryKeyName: string[],
+    primaryKeyValue: any[],
+    columnsName: string[],
+    columnsData: any[]
+) {
+    const sql = `UPDATE ${tableName} SET ${columnsName.map(column => `${column} = ? `)} WHERE ${primaryKeyName.map((pk, i) => i < primaryKeyName.length - 1 ? pk + " = ? AND " : pk + " = ?").join("")}`
+
+    console.log(sql, columnsData.concat(primaryKeyValue));
     db.transaction((tx) => {
         tx.executeSql(
-            `UPDATE ${tableName} SET ${columnsName.map(column => `${column} = ? `)} WHERE id = ?`,
-            columnsData.concat([id]),
+            sql,
+            columnsData.concat(primaryKeyValue),
             (_, result) => {
                 console.log('Données mises à jour avec succès', result);
             },
@@ -70,14 +81,14 @@ export function getAllData(db: SQLite.SQLiteDatabase, tableName: string, dataFor
                     const data: any[] = [];
 
                     for (let i = 0; i < rows.length; i++) {
-                      const rowData: any = {};
+                        const rowData: any = {};
 
-                      for (let j = 0; j < dataFormat.length; j++) {
-                        const dataRow = dataFormat[j];
-                        rowData[dataRow] = rows.item(i)[dataRow];
-                      }
+                        for (let j = 0; j < dataFormat.length; j++) {
+                            const dataRow = dataFormat[j];
+                            rowData[dataRow] = rows.item(i)[dataRow];
+                        }
 
-                      data.push(rowData);
+                        data.push(rowData);
                     }
                     resolve(data);
                 },
@@ -88,3 +99,8 @@ export function getAllData(db: SQLite.SQLiteDatabase, tableName: string, dataFor
         });
     });
 };
+
+
+export function getQueryResultValue(result: SQLite.SQLResultSet) {
+    return Object.values(result["rows"]["_array"][0])
+}

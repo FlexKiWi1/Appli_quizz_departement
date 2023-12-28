@@ -8,21 +8,16 @@ import { COLORS, SIZES } from "../../constants/theme";
 import Text from "../../components/Text";
 import Header from "../../components/Header";
 import QuizGame from "./QuizGame";
-import { QuizProvider, useQuiz } from "./ScreenContext";
+import { QuizProvider, useQuiz } from "../../contexts/QuizContext";
 import { useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 
 
 function QuizStackLayout({ route }) {
-    const { quiz } = route.params;
-    const { quiz: quizO, setQuiz } = useQuiz()
+    const { quiz } = useQuiz()
 
-    useEffect(() => {
-        setQuiz(quiz)
-    }, [quiz])
-
-    return <Stack.Navigator screenOptions={({ route, navigation }) => ({
+    return <Stack.Navigator initialRouteName="quiz-game" screenOptions={({ route, navigation }) => ({
             headerTitle: () => <Header title={quiz.name} subtitle={`Level ${quiz.level}`} />,
             headerBackground: () => <View style={[{ backgroundColor: COLORS.black, alignItems: "center" }]} />,
             headerLeft: () => <HeaderButton name="chevron-left" size={SIZES.xxLarge} color={COLORS.white} onPress={() => navigation.goBack()} />,

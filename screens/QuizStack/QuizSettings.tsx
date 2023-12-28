@@ -11,20 +11,36 @@ import regions from "../../data/regions.json";
 import { Switch } from 'react-native-switch';
 import { typescaleStyle } from '../../styles/Typescale.style';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { useNavigation } from '@react-navigation/native';
-import { useQuiz } from './ScreenContext';
+import { useQuiz } from '../../contexts/QuizContext';
+import { navigate } from '../../utils/navigation';
 
 
 export default function QuizSettings() {
-  const navigation = useNavigation()
+  const {quiz} = useQuiz()
 
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0)
 
-  const [routes, _] = useState([
+  const [routes, setRoutes] = useState([
     { key: 'proposition', title: "Proposition" },
-    { key: 'region', title: "Region" },
   ])
+  const [sceneMapObject, setSceneMapObject] = useState({
+    proposition: PropositionTab,
+  })
+  const sceneMap = SceneMap(sceneMapObject);
+
+  // add tab for the exclude data
+  useEffect(() => {
+    if (quiz.excludeDataName.length > 0) {
+      setRoutes([...routes, {
+        key: `${quiz.excludeDataName}`,
+        title: quiz.excludeDataName
+      }])
+      let temp: any = sceneMapObject;
+      temp[quiz.excludeDataName] = ExcludeDataTab;
+      setSceneMapObject(temp)
+    }
+  }, [])
 
   return (
     <SafeAreaView>
@@ -55,11 +71,10 @@ export default function QuizSettings() {
             {...props}
           />}
 
+          sceneContainerStyle={{flex: 1}}
+
           navigationState={{ index, routes }}
-          renderScene={SceneMap({
-            proposition: PropositionTab,
-            region: RegionTab
-          })}
+          renderScene={sceneMap}
           onIndexChange={setIndex}
           initialLayout={{ width: layout.width }}
           style={{ height: layout.height - 60 }}
@@ -79,8 +94,7 @@ export default function QuizSettings() {
           title='Lancer le quiz'
           iconRight={<Feather name="arrow-right" size={SIZES.xLarge} color={COLORS.black} />}
           onPress={(e) => {
-            navigation.navigate("quiz-game", {
-            })
+            navigate("quiz-game", {})
           }}
         />
       </View>
@@ -131,25 +145,25 @@ function PropositionTab() {
   )
 }
 
-function RegionTab() {
-  const { settings } = useQuiz()
+function ExcludeDataTab() {
+  const { quiz, settings } = useQuiz()
 
   return (
     <ScrollView style={styles.container}>
-      {regions.map(region => (
-        <Pressable key={region.code} style={styles.switchContainer} onPress={(e) => {
-          if (settings.disabledRegions.includes(region.code)) {
-            settings.setDisabledRegions(settings.disabledRegions.filter(regionCode => region.code != regionCode))
+      {quiz.getExcludeData().map(excludeData => (
+        <Pressable key={excludeData} style={styles.switchContainer} onPress={(e) => {
+          if (settings.excludeData.includes(excludeData)) {
+            settings.setExcludeData(settings.excludeData.filter(exclude => excludeData != exclude))
           } else {
-            settings.setDisabledRegions([...settings.disabledRegions, region.code])
+            settings.setExcludeData([...settings.excludeData, excludeData])
           }
         }
         }>
           <Switch
-            value={!settings.disabledRegions.includes(region.code)}
+            value={!settings.excludeData.includes(excludeData)}
             onValueChange={(val) => val
-              ? settings.setDisabledRegions(settings.disabledRegions.filter(regionCode => region.code != regionCode))
-              : settings.setDisabledRegions([...settings.disabledRegions, region.code])
+              ? settings.setExcludeData(settings.excludeData.filter(exclude => excludeData != exclude))
+              : settings.setExcludeData([...settings.excludeData, excludeData])
             }
             renderActiveText={false}
             renderInActiveText={false}
@@ -161,7 +175,7 @@ function RegionTab() {
             circleBorderActiveColor={COLORS.primary}
             circleBorderInactiveColor={COLORS.grayDarkMedium}
           />
-          <Text style={typescaleStyle.h4}>{region.nom}</Text>
+          <Text style={typescaleStyle.h4}>{excludeData}</Text>
         </Pressable>
       ))}
     </ScrollView>
@@ -171,9 +185,9 @@ function RegionTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: "100%",
     paddingHorizontal: 10,
-    paddingBottom: 20
+    marginBottom: 100,
+    overflow: "hidden"
   },
   overlayContainer: {
     width: "100%",

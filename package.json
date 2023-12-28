@@ -16,8 +16,12 @@
     "@react-navigation/native-stack": "^6.9.17",
     "@tanstack/react-query": "^5.14.6",
     "axios": "^1.6.2",
+    "cities.json": "^1.1.31",
     "expo": "~49.0.15",
+    "expo-asset": "~8.10.1",
+    "expo-file-system": "~15.4.5",
     "expo-linear-gradient": "~12.3.0",
+    "expo-sqlite": "~11.3.3",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -28,10 +32,7 @@
     "react-native-svg": "13.9.0",
     "react-native-switch": "^1.5.1",
     "react-native-tab-view": "^3.5.2",
-    "react-native-web": "~0.19.6",
-    "expo-sqlite": "~11.3.3",
-    "expo-file-system": "~15.4.5",
-    "expo-asset": "~8.10.1"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

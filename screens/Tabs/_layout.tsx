@@ -8,18 +8,27 @@ import QuizList from "./QuizList";
 import Settings from "./Settings";
 import { COLORS, SIZES } from "../../constants/theme";
 import Header from "../../components/Header";
+import AvatarButton from "../../components/AvatarButton";
+import images from "../../constants/images";
+import { navigate } from "../../utils/navigation";
+import { useModule } from "../../contexts/ModuleContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
 function TabLayout() {
-    return <Tab.Navigator screenOptions={({route}) => ({
+    const {module} = useModule()
 
+    return <Tab.Navigator screenOptions={({route, navigation}) => ({
         // Header
         headerTitle: () => <Header title={route.name} />,
         headerStyle: {backgroundColor: COLORS.black},
+        headerLeft: (props) => {
+            return <AvatarButton source={module.iconSource} onPress={() => navigate("module", {screen: "user-module-list"})} />
+        },
 
         // TabBar
-        tabBarStyle: {position: "absolute", height: 65},
+        tabBarStyle: {position: "absolute", height: 65, borderTopWidth: 0, paddingHorizontal: 10},
         tabBarBackground: () => <View style={[StyleSheet.absoluteFill, styles.tabBarContainer]} />,
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.grayLight,
@@ -46,7 +55,7 @@ function TabLayout() {
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Map" component={Map} />
         <Tab.Screen name="Quiz" component={QuizList} />
-        <Tab.Screen name="Settings" component={Settings} />
+        {/* <Tab.Screen name="Settings" component={Settings} /> */}
     </Tab.Navigator>
 }
 
@@ -54,7 +63,7 @@ const styles = StyleSheet.create({
     tabBarContainer: {
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
-        backgroundColor: COLORS.grayDarkMedium,
+        backgroundColor: COLORS.black,
         gap: 10,
     }
 })

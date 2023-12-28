@@ -1,5 +1,5 @@
 import { PropsWithChildren, createContext, useContext, useState } from "react";
-import { Quiz } from "../../types";
+import { Quiz } from "../types";
 
 // Context
 type QuizContextType = {
@@ -8,8 +8,8 @@ type QuizContextType = {
     settings: {
         propositionNumber: number,
         setPropositionNumber: (value: number) => void,
-        disabledRegions: string[],
-        setDisabledRegions: (value: string[]) => void,
+        excludeData: string[],
+        setExcludeData: (value: string[]) => void,
     }
 }
 
@@ -19,14 +19,14 @@ const QuizContext = createContext<QuizContextType>({
     settings: {
         propositionNumber: 4,
         setPropositionNumber: () => null,
-        disabledRegions: [],
-        setDisabledRegions: () => null,
+        excludeData: [],
+        setExcludeData: () => null,
     }
 })
 
 export function QuizProvider({ children }: PropsWithChildren) {
     const [propositionNumber, setPropositionNumber] = useState(4)
-    const [disabledRegions, setDisabledRegions] = useState<string[]>([])
+    const [excludeData, setExcludeData] = useState<string[]>([])
     const [quiz, setQuiz] = useState<Quiz>({id: 0, name: "", level: 0})
 
     return (
@@ -36,8 +36,8 @@ export function QuizProvider({ children }: PropsWithChildren) {
             settings: {
                 propositionNumber: propositionNumber,
                 setPropositionNumber: setPropositionNumber,
-                disabledRegions: disabledRegions,
-                setDisabledRegions: setDisabledRegions
+                excludeData: excludeData,
+                setExcludeData: setExcludeData
             }
         }}>
             {children}

@@ -2,7 +2,7 @@ import * as SQLite from "expo-sqlite";
 import { StyleSheet, SafeAreaView, Animated, View, FlatList, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Text from '../../components/Text'
-import { useQuiz } from './ScreenContext'
+import { useQuiz } from '../../contexts/QuizContext'
 import { typescaleStyle } from '../../styles/Typescale.style'
 import { Question } from '../../types'
 import AnswerButton from '../../components/AnswerButton'
@@ -11,10 +11,13 @@ import Button from './Button'
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
 import { updateData } from '../../utils/storage'
+import { useModule } from "../../contexts/ModuleContext";
+import { navigate } from "../../utils/navigation";
 
 
 export default function QuizGame() {
   const navigation = useNavigation()
+  const {module} = useModule()
 
   const { quiz, settings } = useQuiz()
   // const maxQuestions = 4 + quiz.level;
@@ -28,31 +31,31 @@ export default function QuizGame() {
 
   // setup first question
   useEffect(() => {
-    const question = quiz.getQuestion()
+    const question = quiz.getQuestion(quiz.getRealData(settings.excludeData))
     setCurrentQuestion(() => question)
-    setCurrentPropositions(() => quiz.getPropositions(settings.propositionNumber - 1, question as Question))
+    setCurrentPropositions(() => quiz.getPropositions(settings.propositionNumber - 1, question as Question, quiz.getRealData(settings.excludeData)))
   }, [])
 
   useEffect(() => {
     if (progression === maxQuestions) {
       const db = SQLite.openDatabase("db.db")
       console.log(quiz.level);
-      updateData(db, "quiz", quiz.id, ["level"], [quiz.level + 1])
+      updateData(db, "quiz", ["id", "moduleName"], [quiz.id, module.name], ["level"], [quiz.level + 1])
     }
 
     return () => {
     }
   }, [progression])
 
-  const answerQuestion = (answer) => {
+  const answerQuestion = (answer: string) => {
     setCurrentAnswer(() => answer)
     setIsAnswered(true)
   }
 
   const nextQuestion = () => {
-    const question = quiz.getQuestion()
+    const question = quiz.getQuestion(quiz.getRealData(settings.excludeData))
     setCurrentQuestion(() => question)
-    setCurrentPropositions(() => quiz.getPropositions(settings.propositionNumber - 1, question as Question))
+    setCurrentPropositions(() => quiz.getPropositions(settings.propositionNumber - 1, question as Question, quiz.getRealData(settings.excludeData)))
     if (answerIsRight) {
       setProgression(prev => prev + 1)
     } else {
@@ -112,7 +115,7 @@ export default function QuizGame() {
             iconRight={<Feather name="arrow-right" size={SIZES.large} color={COLORS.black} />}
             onPress={() => {
               setProgression(0);
-              navigation.navigate("quiz", {
+              navigate("quiz", {
                 screen: "quiz-game",
                 quiz: {
                   ...quiz,
@@ -123,7 +126,6 @@ export default function QuizGame() {
           />
         </View>
       </>}
-
     </SafeAreaView>
   )
 }

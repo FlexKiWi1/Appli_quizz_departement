@@ -10,17 +10,15 @@ type HeaderProps = {
 
 export default function Header({title, subtitle}: HeaderProps) {
   return (
-    <View style={[StyleSheet.absoluteFill, styles.container]}>
+    <View style={[styles.container]}>
       <Text style={styles.title}>{title}</Text>
       {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
     </View>
   )
 }
 
-
 const styles = StyleSheet.create({
     container: {
-        right: 0,
         width: Dimensions.get("window").width - SIZES.xxLarge,
         alignItems: 'center',
         justifyContent: 'center',
