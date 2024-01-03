@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 function TabLayout() {
     const {module} = useModule()
 
-    return <Tab.Navigator screenOptions={({route, navigation}) => ({
+    return <Tab.Navigator initialRouteName="Quiz" screenOptions={({route, navigation}) => ({
         // Header
         headerTitle: () => <Header title={route.name} />,
         headerStyle: {backgroundColor: COLORS.black},

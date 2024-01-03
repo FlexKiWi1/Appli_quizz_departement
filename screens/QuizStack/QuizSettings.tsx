@@ -112,6 +112,7 @@ function PropositionTab() {
           id: "1",
           text: "2 propositions",
           "aria-valuetext": "2",
+          style: {paddingBottom: SIZES.small / 2},
           fillColor: COLORS.primary,
           unfillColor: COLORS.grayDarkMedium,
           textStyle: { textDecorationLine: "none", color: COLORS.white },
@@ -121,6 +122,7 @@ function PropositionTab() {
           id: "2",
           text: "4 propositions",
           "aria-valuetext": "4",
+          style: {paddingVertical: SIZES.small / 2},
           fillColor: COLORS.primary,
           unfillColor: COLORS.grayDarkMedium,
           textStyle: { textDecorationLine: "none", color: COLORS.white },
@@ -130,6 +132,7 @@ function PropositionTab() {
           id: "3",
           text: "6 propositions",
           "aria-valuetext": "6",
+          style: {paddingTop: SIZES.small / 2},
           fillColor: COLORS.primary,
           unfillColor: COLORS.grayDarkMedium,
           textStyle: { textDecorationLine: "none", color: COLORS.white },
@@ -139,7 +142,7 @@ function PropositionTab() {
         onChange={(selectedItem: ICheckboxButton) => {
           settings.setPropositionNumber(parseInt(selectedItem['aria-valuetext'] as string))
         }}
-        style={{ flexDirection: "column", gap: SIZES.medium }}
+        style={{ flexDirection: "column" }}
       />
     </View>
   )
@@ -174,6 +177,7 @@ function ExcludeDataTab() {
             circleInActiveColor={COLORS.grayLight}
             circleBorderActiveColor={COLORS.primary}
             circleBorderInactiveColor={COLORS.grayDarkMedium}
+            circleBorderWidth={4}
           />
           <Text style={typescaleStyle.h4}>{excludeData}</Text>
         </Pressable>

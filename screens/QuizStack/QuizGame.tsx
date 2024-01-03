@@ -19,7 +19,7 @@ export default function QuizGame() {
   const navigation = useNavigation()
   const {module} = useModule()
 
-  const { quiz, settings } = useQuiz()
+  const { quiz, setQuiz, settings } = useQuiz()
   // const maxQuestions = 4 + quiz.level;
   const maxQuestions = 2;
   const [progression, setProgression] = useState(0)
@@ -41,9 +41,6 @@ export default function QuizGame() {
       const db = SQLite.openDatabase("db.db")
       console.log(quiz.level);
       updateData(db, "quiz", ["id", "moduleName"], [quiz.id, module.name], ["level"], [quiz.level + 1])
-    }
-
-    return () => {
     }
   }, [progression])
 
@@ -115,6 +112,10 @@ export default function QuizGame() {
             iconRight={<Feather name="arrow-right" size={SIZES.large} color={COLORS.black} />}
             onPress={() => {
               setProgression(0);
+              setQuiz({
+                ...quiz,
+                level: quiz.level + 1,
+              })
               navigate("quiz", {
                 screen: "quiz-game",
                 quiz: {
