@@ -7,7 +7,7 @@ import { typescaleStyle } from '../../styles/Typescale.style'
 import { Question } from '../../types'
 import AnswerButton from '../../components/AnswerButton'
 import { COLORS, SIZES } from '../../constants/theme'
-import Button from './Button'
+import Button from '../../components/Button'
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'
 import { updateData } from '../../utils/storage'
@@ -21,7 +21,7 @@ export default function QuizGame() {
 
   const { quiz, setQuiz, settings } = useQuiz()
   // const maxQuestions = 4 + quiz.level;
-  const maxQuestions = 2;
+  const maxQuestions = 3;
   const [progression, setProgression] = useState(0)
   const [currentQuestion, setCurrentQuestion] = useState<Question>()
   const [currentPropositions, setCurrentPropositions] = useState<string[]>([])
@@ -64,16 +64,21 @@ export default function QuizGame() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
 
+      {/* Progress bar */}
       <View style={styles.progressionBarContainer}>
         <View style={[styles.progressionBar, { width: `${(progression * 100) / (maxQuestions)}%` }]}></View>
       </View>
 
       {currentQuestion && progression < maxQuestions && (
         <>
+          {/* Question */}
           <View style={styles.questionContainer}>
             <Text style={typescaleStyle.h3}>{quiz.question}</Text>
-            {quiz.renderQuestion(currentQuestion)}
+            <quiz.renderQuestion question={currentQuestion} />
+            {/* {quiz.renderQuestion(currentQuestion)} */}
           </View>
+
+          {/* Quiz Propositions */}
           <View style={styles.propositionsContainer}>
             <FlatList
               data={currentPropositions}
@@ -85,16 +90,20 @@ export default function QuizGame() {
                 // onPress={() => answer(item)}
                 onPress={() => !isAnswered ? answerQuestion(item) : null}
               >
-                {quiz.renderAnswer(item)}
+                <quiz.renderAnswer answer={item} />
               </AnswerButton>}
             />
           </View>
         </>
       )}
 
+      {/* Next question button */}
       {isAnswered && <>
         {!answerIsRight && <View style={styles.rightAnswerContainer}>
-          <Text>{quiz.getAnswerResponse(currentAnswer)} - {currentAnswer}</Text>
+          <Text>Faux, {currentAnswer} {quiz.errorSentenceLink} <quiz.renderQuestion question={{
+            answer: "",
+            value: quiz.getAnswerResponse(currentAnswer)
+          }} /></Text>
         </View>}
         <View style={styles.buttonContainer}>
           <Button
@@ -106,8 +115,10 @@ export default function QuizGame() {
 
       {progression == maxQuestions && <>
         <View style={styles.nextLevelContainer}>
+          <Feather name="check-circle" color={COLORS.primary} size={SIZES.xxLarge} />
           <Text style={[styles.nextLevelText, typescaleStyle.h2]}>Bravo</Text>
           <Button
+            fill
             title={`Passer au niveau ${quiz.level + 1}`}
             iconRight={<Feather name="arrow-right" size={SIZES.large} color={COLORS.black} />}
             onPress={() => {
@@ -175,12 +186,14 @@ const styles = StyleSheet.create({
   nextLevelContainer: {
     flex: 1,
     flexDirection: "column",
+    alignItems: "center",
     justifyContent: "center",
     marginHorizontal: SIZES.large,
     textAlign: "center",
+    gap: SIZES.xLarge
   },
   nextLevelText: {
     textAlign: "center",
-    marginBottom: SIZES.xLarge
-  }
+    // marginBottom: SIZES.xLarge
+  },
 })

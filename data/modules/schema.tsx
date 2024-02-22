@@ -27,6 +27,25 @@ export const quizzes: Quiz[] = [
     question: "",
 
     /**
+     * Name visible in the quiz settings tab
+     */
+    excludeDataName: "",
+
+    /**
+     * 
+     * 
+     * @returns exclude data
+     */
+    getExcludeData: () => [""],
+
+    /**
+     * Get the 'real' data, that is the data filtered with exclude data
+     * 
+     * @param excludeData exclude data (view getExcludeData function)
+     */
+    getRealData: (excludeData: string[]) => [],
+
+    /**
      * @brief Returns a random question
      * 
      * @returns {Question}
@@ -60,7 +79,7 @@ export const quizzes: Quiz[] = [
     isRightAnswer: (question: Question, answer: string): boolean => {
       return question.answer === answer;
     },
-    getAnswerResponse: (answer: undefined) => {
+    getGoodResponseOfAnswer: (answer: undefined) => {
       return ""
     },
 

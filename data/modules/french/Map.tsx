@@ -1,5 +1,5 @@
-import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { PanResponder, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import Svg, { G, Path } from "react-native-svg";
 import Text from '../../../components/Text';
 import frenchMapData from "./data/frenchMap.json";
@@ -8,6 +8,7 @@ import regions from "./data/regions.json";
 import { typescaleStyle } from '../../../styles/Typescale.style';
 import { Department, Region } from '../../../types';
 import { COLORS } from '../../../constants/theme';
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 
 export function Map() {
     const [currentRegion, setCurrentRegion] = useState("")
@@ -27,8 +28,8 @@ export function Map() {
     }, [lastDepartment, currentDepartment, currentData])
 
     return (
-        <SafeAreaView>
-            <ScrollView horizontal style={styles.mapContainer}>
+        <SafeAreaView style={{flex: 1, flexDirection: "column", justifyContent: "center"}}>
+            <ReactNativeZoomableView style={styles.mapContainer} contentWidth={667}>
                 <Svg
                     width="667px"
                     height="100%"
@@ -46,8 +47,8 @@ export function Map() {
                                 <Path
                                     key={department.number}
                                     strokeWidth={2}
-                                    stroke={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.grayDarkMedium : COLORS.grayDarkMedium}
-                                    fill={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.grayDark : COLORS.black}
+                                    stroke={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.grayDarkMedium : COLORS.gray}
+                                    fill={department.number === currentDepartment ? COLORS.primary : region['code-insee'] === currentRegion ? COLORS.gray : COLORS.grayDark}
                                     data-name={department.name}
                                     data-department-number={department.number}
                                     d={department.d}
@@ -60,7 +61,7 @@ export function Map() {
                         </G>
                     ))}
                 </Svg>
-            </ScrollView>
+            </ReactNativeZoomableView>
             <View style={styles.infosContainer}>
                 <View style={styles.infosBlockContainer}>
                     {currentDepartment === "" ? (
@@ -68,7 +69,7 @@ export function Map() {
                     ) : <>
                         <Text style={typescaleStyle.h1}>{currentDepartment}</Text>
                         <Text style={typescaleStyle.h2}>{currentData.department?.nom}</Text>
-                        <Text style={typescaleStyle.h2}>{currentData.region?.nom}</Text>
+                        <Text style={typescaleStyle.h2}>Region {currentData.region?.nom}</Text>
                     </>}
                 </View>
             </View>
@@ -77,7 +78,6 @@ export function Map() {
 }
 
 const styles = StyleSheet.create({
-
     mapContainer: {
         width: '100%',
         height: '60%',
@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
     },
     infosContainer: {
         height: "30%",
-        paddingHorizontal: 10,
+        paddingTop: 20,
+        paddingBottom: 80,
         // borderWidth: 1,
         // borderColor: "red",
         flexDirection: "row",

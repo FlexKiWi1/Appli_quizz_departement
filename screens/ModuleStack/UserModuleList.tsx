@@ -2,7 +2,7 @@ import { SafeAreaView, StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import Text from '../../components/Text'
 import modules from "../../data/modules/list"
-import Button from '../QuizStack/Button'
+import Button from '../../components/Button'
 import { pageStyles } from '../../styles/Page.style'
 import ModuleButton from '../../components/ModuleButton'
 import { navigate } from '../../utils/navigation'

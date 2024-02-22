@@ -3,20 +3,24 @@ import { Module } from "../types";
 
 type ModuleContextType = {
     module: Module,
-    setModule: (module: Module) => void,
+    setModule: React.Dispatch<React.SetStateAction<Module>>,
+    lastTab: string,
+    setLastTab: React.Dispatch<React.SetStateAction<string>>,
 }
 
 const ModuleContext = createContext<ModuleContextType>({
     module: {},
-    setModule: (module: Module) => null,
 })
 
 export function ModuleProvider({children}: PropsWithChildren) {
     const [module, setModule] = useState<Module>({})
+    const [lastTab, setLastTab] = useState<string>("")
 
     return <ModuleContext.Provider value={{
         module: module,
-        setModule: setModule
+        setModule: setModule,
+        lastTab: lastTab,
+        setLastTab: setLastTab,
     }}>
         {children}
     </ModuleContext.Provider>

@@ -35,7 +35,7 @@ export const quizzes: Quiz[] = [
     isRightAnswer: (question: Question, answer: string): boolean => {
       return question.answer === answer;
     },
-    getAnswerResponse: (answer: string) => {
+    getGoodResponseOfAnswer: (answer: string) => {
       return ""
     },
     renderQuestion: (question: Question) => {

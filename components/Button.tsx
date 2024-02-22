@@ -1,16 +1,17 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { ReactNode } from 'react'
-import { COLORS, SIZES } from '../../constants/theme';
+import { COLORS, SIZES } from '../constants/theme';
 
 type ButtonProps = {
     title: string;
     iconLeft?: ReactNode;
     iconRight?: ReactNode;
+    fill?: boolean;
 } & TouchableOpacity["props"];
 
-export default function Button({title, iconLeft, iconRight, ...props}: ButtonProps) {
+export default function Button({title, iconLeft, iconRight, fill = false, ...props}: ButtonProps) {
   return (
-    <TouchableOpacity style={[props.style, styles.container, !iconLeft && !iconRight && {justifyContent: "center"}]} {...props}>
+    <TouchableOpacity {...props} style={[props.style, styles.container, !iconLeft && !iconRight && {justifyContent: "center"}, fill && styles.fill]} >
         {iconLeft && iconLeft}
         <Text style={styles.text}>{title}</Text>
         {iconRight && iconRight}
@@ -32,5 +33,8 @@ const styles = StyleSheet.create({
         color: COLORS.black,
         fontSize: SIZES.medium,
         fontWeight: "600"
+    },
+    fill: {
+        width: "100%"
     }
 })

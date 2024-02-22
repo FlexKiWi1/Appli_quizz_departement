@@ -15,6 +15,7 @@ export type Quiz = {
     id: number;
     name: string;
     question: string;
+    errorSentenceLink: string;
     level: number;
     excludeDataName: string;
     getExcludeData: () => string[];
@@ -23,8 +24,8 @@ export type Quiz = {
     getPropositions: (number: number, question: Question, realData: object[]) => string[];
     isRightAnswer: (question: Question, answer: string) => boolean;
     getAnswerResponse: (answer: any) => string;
-    renderQuestion: (question: Question) => ReactNode;
-    renderAnswer: (answer: any) => ReactNode;
+    renderQuestion: ({question}: {question: Question}) => ReactNode;
+    renderAnswer: ({answer}: any) => ReactNode;
 }
 
 export type Question = {

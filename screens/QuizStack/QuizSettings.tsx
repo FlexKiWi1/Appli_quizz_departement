@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import Text from '../../components/Text'
 import { COLORS, SIZES } from '../../constants/theme';
 import { TabView, TabBar, SceneMap } from 'react-native-tab-view';
-import Button from './Button';
+import Button from '../../components/Button';
 import { Feather } from '@expo/vector-icons';
 import BouncyCheckboxGroup, { ICheckboxButton } from 'react-native-bouncy-checkbox-group';
 
